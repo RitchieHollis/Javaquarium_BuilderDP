@@ -44,7 +44,7 @@ abstract public class Poisson implements IPoisson {
     abstract public void manger(IVivant a);
     abstract public IPoisson reproduire(IPoisson a);
 
-    public String generateName(){
+    public static String generateName(){
 
         List<String> fragmentsNom = new ArrayList<>(Arrays.asList("ca","da","mo","di","du","ma","ca","no"));
         Random rand = new Random();

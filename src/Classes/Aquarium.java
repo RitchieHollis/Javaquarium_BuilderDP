@@ -8,15 +8,15 @@ import java.security.SecureRandom;
 
 public class Aquarium {
     
-    List<IVivant> listeVivant = new ArrayList<>();
+    static List<IVivant> listeVivant = new ArrayList<>();
 
-    private int nbrePoissons; private int nbreAlgues; private int nbreJours;
+    private static int nbrePoissons; private static int nbreAlgues; private int nbreJours;
+    private Aquarium(Builder builder){ //this.nbrePoissons = 0; this.nbreAlgues = 0; this.nbreJours = 0;
 
-    public Aquarium(){ this.nbrePoissons = 0; this.nbreAlgues = 0; this.nbreJours = 0;}
+    }
+    private static void ajouterVivant(IVivant a){ 
 
-    public void ajouterVivant(IVivant a){ 
-
-        this.listeVivant.add((IVivant)a);
+        listeVivant.add((IVivant)a);
         if(a instanceof Algue)
             nbreAlgues++;
         else if(a instanceof Poisson)
@@ -27,15 +27,15 @@ public class Aquarium {
         System.out.println("Type: \tNom: \tSexe: \tAge: \tPdv: \n");
 
         String nom; char sexe;
-        for(int i = 0; i < this.listeVivant.size(); i++){
+        for(int i = 0; i < listeVivant.size(); i++){
 
-                if(this.listeVivant.get(i).getNom() == null) nom = ""; else nom = this.listeVivant.get(i).getNom();
-                if(this.listeVivant.get(i).getSexe() == null) sexe = '\0'; else sexe = this.listeVivant.get(i).getSexe();
-                System.out.println(this.listeVivant.get(i).getType()+"\t"+
+                if(listeVivant.get(i).getNom() == null) nom = ""; else nom = listeVivant.get(i).getNom();
+                if(listeVivant.get(i).getSexe() == null) sexe = '\0'; else sexe = listeVivant.get(i).getSexe();
+                System.out.println(listeVivant.get(i).getType()+"\t"+
                                    nom+"\t"+
                                    sexe+"\t"+
-                                   this.listeVivant.get(i).getAge()+"\t"+
-                                   this.listeVivant.get(i).getPdv());
+                                   listeVivant.get(i).getAge()+"\t"+
+                                   listeVivant.get(i).getPdv());
         }
         System.out.println("\nNombre d'algues: "+nbreAlgues);
         System.out.println("Nombre de poissons: "+nbrePoissons);
@@ -79,7 +79,7 @@ public class Aquarium {
         int propabiliteAlgueMulti = 15;
         SecureRandom rand = new SecureRandom();
         int temp = rand.nextInt(99);
-        for(int i = 0; i < this.listeVivant.size(); i++){
+        for(int i = 0; i < listeVivant.size(); i++){
 
             if(listeVivant.get(i) instanceof IAlgue && listeVivant.get(i) != null){
 
@@ -217,5 +217,81 @@ public class Aquarium {
         Collections.shuffle(listeVivant);
         System.out.println();
     }
+    public static class Builder { //builder pour aquarium
+        
+        public Builder(int nbrealgues, int nbreCarni, int nbreHerbi){
+            nbreAlgues(nbrealgues); nbreDePoissonCarni(nbreCarni); nbreDePoissonHerbi(nbreHerbi);
+        }
+        public Builder nbreDePoissonCarni(int nbre){
 
+            List<IPoisson> liste = new ArrayList<>();
+            Random random = new Random();
+            for(int i = 0; i < nbre; i++){
+
+                TypeVivant a;
+                do{
+                    a = TypeVivant.values()[random.nextInt(TypeVivant.values().length)];
+                }
+                while(a.equals(TypeVivant.Algue) || a.equals(TypeVivant.Bare) || a.equals(TypeVivant.Carpe) || a.equals(TypeVivant.Sole));
+
+                if(a.equals(TypeVivant.Mérou) || a.equals(TypeVivant.Poisson_clown) || a.equals(TypeVivant.Thon)){
+                    int sexe = random.nextInt(2);
+                    Character genre = null;
+                    if(sexe == 0) genre = 'M'; 
+                    else if(sexe == 1) genre = 'F';
+                    Carnivore car = new Carnivore(a.toString(), Poisson.generateName(), genre, 10, random.nextInt(20), random.nextInt(6));
+                    liste.add(car);
+                }
+            }
+            for(IVivant i : liste) ajouterVivant(i);;
+            return this;
+        }
+        public Builder nbreDePoissonHerbi(int nbre){
+
+            List<IPoisson> liste = new ArrayList<>();
+            Random random = new Random();
+            for(int i = 0; i < nbre; i++){
+
+                TypeVivant a;
+                do{
+                    a = TypeVivant.values()[random.nextInt(TypeVivant.values().length)];
+                }
+                while(a.equals(TypeVivant.Algue) || a.equals(TypeVivant.Mérou) || a.equals(TypeVivant.Poisson_clown) || a.equals(TypeVivant.Thon));
+
+                if(a.equals(TypeVivant.Bare) || a.equals(TypeVivant.Carpe) || a.equals(TypeVivant.Sole)){
+                    int sexe = random.nextInt(2);
+                    Character genre = null;
+                    if(sexe == 0) genre = 'M'; 
+                    else if(sexe == 1) genre = 'F';
+                    Herbivore car = new Herbivore(a.toString(), Poisson.generateName(), genre, 10, random.nextInt(20), random.nextInt(6));
+                    liste.add(car);
+                }
+            }
+            for(IVivant i : liste) ajouterVivant(i);
+            return this;
+        }
+        public Builder nbreAlgues(int nbre){
+
+            List<IAlgue> liste = new ArrayList<>();
+            Random random = new Random();
+            for(int i = 0; i < nbre; i++){
+
+                TypeVivant a;
+                do{
+                    a = TypeVivant.values()[random.nextInt(TypeVivant.values().length)];
+                }
+                while(!(a.equals(TypeVivant.Algue)));
+
+                if(a.equals(TypeVivant.Algue)){
+                    Algue car = new Algue(random.nextInt(10), random.nextInt(20));
+                    liste.add(car);
+                }
+            }
+            for(IVivant i : liste) ajouterVivant(i);;
+            return this;
+        }
+        public Aquarium build(){
+            return new Aquarium(this);
+        }
+    }
 }
