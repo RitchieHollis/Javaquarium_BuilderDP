@@ -8,7 +8,7 @@ public class Main {
         boolean boucle = true;
         while(boucle){ 
 
-            boucle = aquarium.passerUnJour();
+            boucle = aquarium.passingDay();
             System.console().readLine();
         }
     }

@@ -4,16 +4,16 @@ import Interfaces.*;
 
 import java.util.*;
 
-public class Herbivore extends Poisson{
+public class Herbivore extends Fish{
 
-    TypeVivant type = null;
-    List<TypeVivant> typesHerbi = new ArrayList<>(Arrays.asList(TypeVivant.Bare, TypeVivant.Sole, TypeVivant.Carpe));
+    TypeLiving type = null;
+    List<TypeLiving> typesHerbi = new ArrayList<>(Arrays.asList(TypeLiving.Bare, TypeLiving.Sole, TypeLiving.Carpe));
 
-    public Herbivore(String race, String nom, Character sexe, int pdv, int age, int pAttaque){ 
+    public Herbivore(String race, String name, Character sexe, int hp, int age, int pAttack){ 
 
-        super(nom, sexe, pdv, age, pAttaque);
+        super(name, sexe, hp, age, pAttack);
 
-        for (TypeVivant typep : typesHerbi) {
+        for (TypeLiving typep : typesHerbi) {
             if (typep.name().equalsIgnoreCase(race)) {
                 this.type = typep;
                 break;
@@ -21,34 +21,34 @@ public class Herbivore extends Poisson{
         }
     }
 
-    @Override public TypeVivant getType(){ return this.type; }
+    @Override public TypeLiving getType(){ return this.type; }
 
-    @Override public void manger(IVivant a) {
+    @Override public void eat(ILivingBeing a) {
         
         if(this != a){
             
-            if(a instanceof IAlgue){
+            if(a instanceof IAlgae){
 
-                a.changerPdv(-this.pAttaque);
-                this.pdv += 3;
+                a.changeHP(-this.pAttack);
+                this.hp += 3;
             }
         }
     }
 
-    @Override public IPoisson reproduire(IPoisson a){
+    @Override public IFish reproduire(IFish a){
 
         if(a.getSexe() != this.sexe){
 
-            Random sexeAuHazard = new Random();
-            int i = sexeAuHazard.nextInt(2);
+            Random randomSexe = new Random();
+            int i = randomSexe.nextInt(2);
 
             if(i == 0) {
-                Herbivore poisson = new Herbivore(this.getType().name(), generateName(), 'M', ((this.getMaxPdv()+a.getMaxPdv())/2), 0, ((this.getPAttaque()+a.getPAttaque())/2));
-                return poisson;
+                Herbivore fish = new Herbivore(this.getType().name(), generateName(), 'M', ((this.getMaxHP()+a.getMaxHP())/2), 0, ((this.getPAttack()+a.getPAttack())/2));
+                return fish;
             }
             else if(i == 1) {
-                Herbivore poisson = new Herbivore(this.getType().name(), generateName(), 'F', (this.getMaxPdv()+a.getMaxPdv()/2), 0, (this.getPAttaque()+a.getPAttaque()/2));
-                return poisson;
+                Herbivore fish = new Herbivore(this.getType().name(), generateName(), 'F', (this.getMaxHP()+a.getMaxHP()/2), 0, (this.getPAttack()+a.getPAttack()/2));
+                return fish;
             }
             else return null;
         }

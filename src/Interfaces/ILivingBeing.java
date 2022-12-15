@@ -1,25 +1,25 @@
 package Interfaces;
 
-public interface IVivant {
+public interface ILivingBeing {
     
-    enum TypeVivant{
+    enum TypeLiving{
         Algue,
         Mérou, Thon, Poisson_clown,
         Sole, Bare, Carpe
     }
 
-    int getMaxPdv();
+    int getMaxHP();
 
-    String getNom();
+    String getName();
     Character getSexe();
 
-    TypeVivant getType();
+    TypeLiving getType();
 
-    int getPdv();
-    void changerPdv(int degats);
+    int getHP();
+    void changeHP(int attack);
 
     int getAge();
-    void vieillir();
+    void getOlder();
 
     int getAgeReproduction();
 }

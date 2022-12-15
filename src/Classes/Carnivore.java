@@ -5,16 +5,16 @@ import Interfaces.*;
 import java.util.*;
 
 
-public class Carnivore extends Poisson {
+public class Carnivore extends Fish {
 
-    TypeVivant type = null;
-    List<TypeVivant> typesCarni = new ArrayList<>(Arrays.asList(TypeVivant.Thon, TypeVivant.Mérou, TypeVivant.Poisson_clown));
+    TypeLiving type = null;
+    List<TypeLiving> typesCarni = new ArrayList<>(Arrays.asList(TypeLiving.Thon, TypeLiving.Mérou, TypeLiving.Poisson_clown));
 
-    public Carnivore(String race, String nom, Character sexe, int pdv, int age, int pAttaque){ 
+    public Carnivore(String race, String name, Character sexe, int hp, int age, int pAttack){ 
 
-        super(nom, sexe, pdv, age, pAttaque);
+        super(name, sexe, hp, age, pAttack);
 
-        for (TypeVivant typep : typesCarni) {
+        for (TypeLiving typep : typesCarni) {
             if (typep.name().equalsIgnoreCase(race)) {
                 this.type = typep;
                 break;
@@ -22,43 +22,43 @@ public class Carnivore extends Poisson {
         }
     }
 
-    @Override public TypeVivant getType(){ return this.type; }
+    @Override public TypeLiving getType(){ return this.type; }
 
-    @Override public void manger(IVivant a) {
+    @Override public void eat(ILivingBeing a) {
         
         if(this != a){
             
-            if(a instanceof IPoisson){
+            if(a instanceof IFish){
 
-                IPoisson poiss = (IPoisson)a;
+                IFish poiss = (IFish)a;
                 Random rand = new Random();
 
                 if(rand.nextInt(100)<= 60){ //probabilite de manger un autre;
-                    System.out.print("Oui\n");
-                    poiss.changerPdv(-this.pAttaque);
-                    this.pdv += 5;
+                    System.out.print("Yes\n");
+                    poiss.changeHP(-this.pAttack);
+                    this.hp += 5;
                 }
                 else{
                     System.out.print("Non\n");
-                    this.pdv -= 4;
+                    this.hp -= 4;
                 }
             }
         }
     }
-    @Override public IPoisson reproduire(IPoisson a){
+    @Override public IFish reproduire(IFish a){
 
         if(a.getSexe() != this.sexe){
 
-            Random sexeAuHazard = new Random();
-            int i = sexeAuHazard.nextInt(2);
+            Random randomSex = new Random();
+            int i = randomSex.nextInt(2);
 
             if(i == 0) {
-                Carnivore poisson = new Carnivore(this.getType().name(), generateName(), 'M', (10), 0, (this.getPAttaque()+a.getPAttaque()/2));
-                return poisson;
+                Carnivore fish = new Carnivore(this.getType().name(), generateName(), 'M', (10), 0, (this.getPAttack()+a.getPAttack()/2));
+                return fish;
             }
             else if(i == 1) {
-                Carnivore poisson = new Carnivore(this.getType().name(), generateName(), 'F', (10), 0, (this.getPAttaque()+a.getPAttaque()/2));
-                return poisson;
+                Carnivore fish = new Carnivore(this.getType().name(), generateName(), 'F', (10), 0, (this.getPAttack()+a.getPAttack()/2));
+                return fish;
             }
             else return null;
         }
